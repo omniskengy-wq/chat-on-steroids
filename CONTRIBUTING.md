@@ -20,6 +20,12 @@ npm run dev        # Electron development build
 
 A behavior change should include a deterministic regression test where practical. Run the nearest focused tests while working and `npm run verify` before submitting.
 
+GitHub Actions is the primary CI surface while healthy. Its Windows x64 and macOS arm64
+checks use the required native hosted runners; the Linux x64 check uses the repository's
+Syntharian self-hosted runner labels. CircleCI is retained as an independent clean-room
+secondary/fallback surface and runs the same `npm run verify:ci` and published-plugin live
+checks. A passing secondary check does not replace the required native GitHub matrix.
+
 ## Packaging
 
 Release packages are platform/architecture-specific:

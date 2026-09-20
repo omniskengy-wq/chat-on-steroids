@@ -1,0 +1,28 @@
+version: 2.1
+
+jobs:
+  verify:
+    docker:
+      - image: cimg/node:22.14
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Verify
+          command: npm run verify:ci
+      - run:
+          name: Install plugin Python runtime
+          command: python -m pip install uv==0.12.5
+      - run:
+          name: Exercise published plugins
+          environment:
+            COS_PLUGIN_LIVE_TEST: '1'
+          command: npx vitest run test/plugins-live-proxy.test.ts test/plugins-python-live.test.ts test/plugins-catalog-live.test.ts
+
+workflows:
+  verify:
+    jobs:
+      - verify
