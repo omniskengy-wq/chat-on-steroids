@@ -20,6 +20,17 @@ npm run dev        # Electron development build
 
 A behavior change should include a deterministic regression test where practical. Run the nearest focused tests while working and `npm run verify` before submitting.
 
+## Continuous integration
+
+GitHub Actions is the primary routine execution, diagnostics and certification surface while
+the Syntharian self-hosted runner fleet is healthy. Its Linux routine job uses the
+`self-hosted`, `Linux`, `X64`, `syntharian` runner labels; the Windows and macOS jobs and
+release packaging remain on their required native runners.
+
+CircleCI is preserved as an independent secondary clean-room certification and fallback
+surface. It runs the same repository verification and published-plugin gates without replacing
+the GitHub Actions checks or their required status names.
+
 ## Packaging
 
 Release packages are platform/architecture-specific:
