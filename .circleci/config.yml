@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  verify:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Install Node.js 22
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs python3-pip
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Verify
+          command: npm run verify:ci
+      - run:
+          name: Set up Python and uv
+          command: |
+            python3 --version
+            sudo python3 -m pip install --break-system-packages uv==0.12.5
+      - run:
+          name: Exercise published plugins on this OS
+          command: |
+            COS_PLUGIN_LIVE_TEST=1 npx vitest run \
+              test/plugins-live-proxy.test.ts \
+              test/plugins-python-live.test.ts \
+              test/plugins-catalog-live.test.ts
+
+workflows:
+  verify:
+    jobs:
+      - verify
